@@ -70,7 +70,7 @@ function log() {
   local set_color="$2"
   case $set_color in
     red) color=$(tput setaf 1) ;;
-    green) color=$(tput setaf 2) ;;
+    green) color='\e[32m' ;;
     yellow) color=$(tput setaf 3) ;;
     gray) color=$(tput setaf 8) ;;
     white) color=$(tput setaf 15) ;;
