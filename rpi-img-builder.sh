@@ -8,7 +8,7 @@ was written for this script.
 DISCLAIMER
 
 # Descomentar para activar debug
-#debug=true
+# debug=true
 if [ "${debug:=}" = true ]; then
   exec > >(tee -a -i "${0%.*}.log") 2>&1
   set -x
@@ -69,11 +69,11 @@ fi
 function log() {
   local set_color="$2"
   case $set_color in
-    red) color=$(tput setaf 1) ;;
+    red) color='\e[31m' ;;
     green) color='\e[32m' ;;
-    yellow) color=$(tput setaf 3) ;;
-    gray) color=$(tput setaf 8) ;;
-    white) color=$(tput setaf 15) ;;
+    yellow) color='\e[33m' ;;
+    gray) color='\e[38m' ;;
+    white) color='\e[37m' ;;
     *) text="$1" ;;
   esac
   [ -z "$text" ] && echo -e "$color $1 \033[0m" || echo -e "$text"
@@ -97,7 +97,7 @@ total_time() {
   [[ $H -gt 0 ]] && printf '%d hours ' $H
   [[ $M -gt 0 ]] && printf '%d minutes ' $M
   [[ $D -gt 0 || $H -gt 0 || $M -gt 0 ]] && printf 'and '
-  printf '%d seconds' $S
+  printf '%d seconds\n' $S
 }
 
 installdeps() {
@@ -113,7 +113,7 @@ status " - Actualizando repositorio apt ..."
 apt-get update || apt-get update
 status " - Instando dependencias necesarias ..."
 DEPS="binfmt-support dosfstools qemu-user-static rsync wget lsof git parted dirmngr e2fsprogs \
-systemd-container debootstrap xz-utils kmod udev dbus gnupg gnupg-utils debian-archive-keyring"
+systemd-container debootstrap eatmydata xz-utils kmod udev dbus gnupg gnupg-utils debian-archive-keyring"
 installdeps
 
 # Checkear versión mínima debootstrap
@@ -163,7 +163,7 @@ systemd-nspawn_exec() {
 
 # Base debootstrap
 COMPONENTS="main contrib non-free"
-MINPKGS="ifupdown openresolv net-tools init dbus rsyslog cron wget gnupg"
+MINPKGS="ifupdown openresolv net-tools init dbus rsyslog cron eatmydata wget gnupg"
 EXTRAPKGS="openssh-server parted locales dosfstools sudo libterm-readline-gnu-perl"
 FIRMWARES="firmware-misc-nonfree firmware-atheros firmware-realtek firmware-libertas firmware-brcm80211"
 WIRELESSPKGS="wpasupplicant crda wireless-tools rfkill wireless-regdb"
@@ -224,8 +224,31 @@ elif [[ "$APT_CACHER" =~ (apt-cacher-ng|root) ]]; then
 fi
 
 status "debootstrap first stage"
-debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
+eatmydata debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
   --keyring=$KEYRING --variant - --include="${MINPKGS// /,}" "$RELEASE" "$R" $BOOTSTRAP_URL
+
+for archive in "$R"/var/cache/apt/archives/*eatmydata*.deb; do
+  dpkg-deb --fsys-tarfile "$archive" >"$R"/eatmydata
+  tar -xkf "$R"/eatmydata -C "$R"
+  rm -f "$R"/eatmydata
+done
+
+systemd-nspawn_exec dpkg-divert --divert /usr/bin/dpkg-eatmydata --rename --add /usr/bin/dpkg
+
+cat >"$R"/usr/bin/dpkg <<EOF
+#!/bin/sh
+if [ -e /usr/lib/${LIB_ARCH}/libeatmydata.so ]; then
+    [ -n "\${LD_PRELOAD}" ] && LD_PRELOAD="\$LD_PRELOAD:"
+    LD_PRELOAD="\$LD_PRELOAD\$so"
+fi
+for so in /usr/lib/${LIB_ARCH}/libeatmydata.so; do
+    [ -n "\$LD_PRELOAD" ] && LD_PRELOAD="\$LD_PRELOAD:"
+    LD_PRELOAD="\$LD_PRELOAD\$so"
+done
+export LD_PRELOAD
+exec "\$0-eatmydata" --force-unsafe-io "\$@"
+EOF
+chmod 755 "$R"/usr/bin/dpkg
 
 cat >"$R"/etc/apt/apt.conf.d/99_norecommends <<EOF
 APT::Install-Recommends "false";
@@ -257,7 +280,7 @@ EOF
 fi
 
 status "debootstrap second stage"
-systemd-nspawn_exec /debootstrap/debootstrap --second-stage
+systemd-nspawn_exec eatmydata /debootstrap/debootstrap --second-stage
 
 # Definir sources.list
 if [ "$OS" = "debian" ]; then
@@ -374,8 +397,8 @@ if [[ "${OS}" == "debian" ]]; then
   FIRMWARES="${FIRMWARES}/buster-backports"
 fi
 
-systemd-nspawn_exec apt-get update
-systemd-nspawn_exec apt-get install -y ${FIRMWARES}
+systemd-nspawn_exec eatmydata apt-get update
+systemd-nspawn_exec eatmydata apt-get install -y ${FIRMWARES}
 
 # Disable suspend/resume - speeds up boot massively
 mkdir -p "${R}/etc/initramfs-tools/conf.d/"
@@ -383,7 +406,7 @@ echo "RESUME=none" > "${R}/etc/initramfs-tools/conf.d/resume"
 
 # Instalando kernel
 # shellcheck disable=SC2086
-systemd-nspawn_exec apt-get install -y ${KERNEL_IMAGE}
+systemd-nspawn_exec eatmydata apt-get install -y ${KERNEL_IMAGE}
 # Configuración firmware
 if [ "$OS" = raspios ]; then
   cat <<-EOM >"${R}"${BOOT}/cmdline.txt
@@ -401,7 +424,7 @@ echo "hdmi_force_hotplug=1" >>"$R"/"${BOOT}"/config.txt
 
 status "Instalar paquetes base"
 # shellcheck disable=SC2086
-systemd-nspawn_exec apt-get install -y $INCLUDEPKGS
+systemd-nspawn_exec eatmydata apt-get install -y $INCLUDEPKGS
 status "Activar servicios generate-ssh-host-keys y rpi-resizerootfs"
 #echo | sed -e '/^#/d ; /^ *$/d' | systemd-nspawn_exec <<\EOF
 status "Activar servicio redimendionado partición root"
@@ -569,13 +592,15 @@ if [ -n "$PROXY_URL" ]; then
   unset http_proxy
   rm -rf "$R"/etc/apt/apt.conf.d/66proxy
 fi
+rm -f "$R"/usr/bin/dpkg
+systemd-nspawn_exec dpkg-divert --remove --rename /usr/bin/dpkg
 find "$R"/var/log -depth -type f -print0 | xargs -0 truncate -s 0
 rm -f "$R"/usr/bin/qemu*
 rm -f "$R"/bkp-packages
 rm -rf "$R"/userland
 rm -rf "$R"/opt/vc/src
 if [[ "$VARIANT" == "slim" ]]; then
-  systemd-nspawn_exec apt-get -y remove --purge wget tasksel
+  systemd-nspawn_exec apt-get -y remove --purge wget tasksel eatmydata libeatmydata1
   find "$R"/usr/share/doc -depth -type f ! -name copyright -print0 | xargs -0 rm
   find "$R"/usr/share/doc -empty -print0 | xargs -0 rmdir
   rm -rf "$R"/usr/share/man/* "$R"/usr/share/info/*
@@ -639,9 +664,9 @@ umount -l "$MOUNTDIR"
 rm -rf "$BASEDIR"
 
 status "Chequear particiones"
-#log "Check filesystem boot partition type vfat" white
+log "Check filesystem boot partition type vfat" white
 dosfsck -w -r -l -a -t "$BOOT_LOOP"
-#log "Check filesystem root partition type $FSTYPE" white
+log "Check filesystem root partition type $FSTYPE" white
 if [[ "$FSTYPE" == "f2fs" ]]; then
   fsck.f2fs -y -f "$ROOT_LOOP"
 elif [[ "$FSTYPE" == "ext4" ]]; then
@@ -652,7 +677,7 @@ fi
 blockdev --flushbufs "${LOOPDEVICE}"
 losetup -d "${LOOPDEVICE}"
 
-[[ "$COMPRESS" =~ (gzip|xz) ]] #&& log "Comprimir imagen" white
+[[ "$COMPRESS" =~ (gzip|xz) ]] && log "Comprimir imagen" white
 if [[ "$COMPRESS" == "gzip" ]]; then
   gzip "${IMGNAME}"
   chmod 664 "${IMGNAME}.gz"
@@ -667,5 +692,5 @@ fi
 # Tiempo total compilación
 total_time $SECONDS
 # Quit
-log "\n Your image is: \033[0m $IMGNAME (Size: $(du -h $IMGNAME | cut -f1))"
+log "\n Your image is: \033[0m $IMGNAME (Size: $(du -h $IMGNAME | cut -f1))" white
 exit 0
