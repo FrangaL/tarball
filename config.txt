@@ -5,7 +5,7 @@ OS="raspios"
 #VARIANT="slim"
 
 # Seleccionar arquitectura entre arm64 y armhf.
-#ARCHITECTURE="armhf"
+ARCHITECTURE="armhf"
 
 # Definir manualmente la configuración de red (eth0).
 #IPV4="192.168.10.100"
