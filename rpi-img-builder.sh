@@ -113,7 +113,7 @@ status " - Actualizando repositorio apt ..."
 apt-get update || apt-get update
 status " - Instando dependencias necesarias ..."
 DEPS="binfmt-support dosfstools qemu-user-static rsync wget lsof git parted dirmngr e2fsprogs \
-systemd-container debootstrap eatmydata xz-utils kmod udev dbus gnupg gnupg-utils debian-archive-keyring"
+systemd-container debootstrap xz-utils kmod udev dbus gnupg gnupg-utils debian-archive-keyring"
 installdeps
 
 # Checkear versión mínima debootstrap
@@ -383,7 +383,7 @@ echo "RESUME=none" > "${R}/etc/initramfs-tools/conf.d/resume"
 
 # Instalando kernel
 # shellcheck disable=SC2086
-systemd-nspawn_exec eatmydata apt-get install -y ${KERNEL_IMAGE}
+systemd-nspawn_exec apt-get install -y ${KERNEL_IMAGE}
 # Configuración firmware
 if [ "$OS" = raspios ]; then
   cat <<-EOM >"${R}"${BOOT}/cmdline.txt
@@ -575,7 +575,7 @@ rm -f "$R"/bkp-packages
 rm -rf "$R"/userland
 rm -rf "$R"/opt/vc/src
 if [[ "$VARIANT" == "slim" ]]; then
-  systemd-nspawn_exec apt-get -y remove --purge wget tasksel eatmydata libeatmydata1
+  systemd-nspawn_exec apt-get -y remove --purge wget tasksel
   find "$R"/usr/share/doc -depth -type f ! -name copyright -print0 | xargs -0 rm
   find "$R"/usr/share/doc -empty -print0 | xargs -0 rmdir
   rm -rf "$R"/usr/share/man/* "$R"/usr/share/info/*
