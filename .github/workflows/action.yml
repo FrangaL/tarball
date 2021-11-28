@@ -7,10 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     name: rpi-builder
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
       - uses: actions/checkout@v2
-      - name: Build
+      - name: Build images
         run: |
           sudo ./rpi-img-builder.sh
       - name: Get Tag
