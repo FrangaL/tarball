@@ -665,8 +665,8 @@ rm -rf "$BASEDIR"
 
 status "Chequear particiones"
 #log "Check filesystem boot partition type vfat" white
-#dosfsck -w -r -l -a -t "$BOOT_LOOP"
-log "Check filesystem root partition type $FSTYPE" white
+dosfsck -w -r -l -a -t "$BOOT_LOOP"
+#log "Check filesystem root partition type $FSTYPE" white
 if [[ "$FSTYPE" == "f2fs" ]]; then
   fsck.f2fs -y -f "$ROOT_LOOP"
 elif [[ "$FSTYPE" == "ext4" ]]; then
