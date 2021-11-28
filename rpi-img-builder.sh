@@ -692,5 +692,5 @@ fi
 # Tiempo total compilación
 total_time $SECONDS
 # Quit
-log "\n Your image is: $(tput sgr0) $IMGNAME (Size: $(du -h $IMGNAME | cut -f1))" white
+log "\n Your image is: $(tput sgr0) $IMGNAME (Size: $(du -h $IMGNAME | cut -f1))"
 exit 0

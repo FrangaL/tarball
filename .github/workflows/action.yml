@@ -13,3 +13,10 @@ jobs:
       - name: Build
         run: |
           sudo ./rpi-img-builder.sh
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: publish image
+          draft: true
+          files: |
+            raspios-buster-lite-arm64.img.xz
