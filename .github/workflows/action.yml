@@ -15,11 +15,11 @@ jobs:
           sudo ./rpi-img-builder.sh
       - name: Get Tag
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}          
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
           name: v${{ steps.vars.outputs.tag }}
-          draft: true
+          draft: false
           files: |
             raspios-buster-lite-arm64.img.xz
