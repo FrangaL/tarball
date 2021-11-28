@@ -82,7 +82,7 @@ function log() {
 # Show progress
 status() {
   status_i=$((status_i+1))
-  echo -e "$(tput setaf 2) ✅ ${status_i}/${status_t}:$(tput sgr0) $1"
+  echo -e "$(tput setaf 2) ✅ ${status_i}/${status_t}:\033[0m $1"
 }
 status_i=0
 status_t=$(($(grep '.*status ' $0 | wc -l) -1))
