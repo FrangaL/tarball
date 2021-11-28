@@ -97,7 +97,7 @@ total_time() {
   [[ $H -gt 0 ]] && printf '%d hours ' $H
   [[ $M -gt 0 ]] && printf '%d minutes ' $M
   [[ $D -gt 0 || $H -gt 0 || $M -gt 0 ]] && printf 'and '
-  printf '%d seconds\n' $S
+  printf '%d seconds' $S
 }
 
 installdeps() {

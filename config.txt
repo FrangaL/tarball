@@ -2,10 +2,10 @@
 OS="raspios"
 
 # Elegir entra las variantes lite y slim con el sistema mínimo.
-#VARIANT="slim"
+VARIANT="slim"
 
 # Seleccionar arquitectura entre arm64 y armhf.
-ARCHITECTURE="armhf"
+#ARCHITECTURE="armhf"
 
 # Definir manualmente la configuración de red (eth0).
 #IPV4="192.168.10.100"
