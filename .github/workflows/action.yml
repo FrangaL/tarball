@@ -18,7 +18,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          #name: v${{ steps.vars.outputs.tag }}
-          #draft: false
+          name: v${{ steps.vars.outputs.tag }}
+          draft: false
           files: |
             raspios-buster-lite-arm64.img.xz
