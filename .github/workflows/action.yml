@@ -27,4 +27,7 @@ jobs:
           name: v${{ steps.vars.outputs.tag }}
           draft: true
           files: |
+            debian-buster-lite-arm64.img.xz
+            debian-buster-lite-armhf.img.xz
             raspios-buster-lite-arm64.img.xz
+            raspios-buster-lite-armhf.img.xz
