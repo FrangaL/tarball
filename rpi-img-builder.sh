@@ -8,7 +8,7 @@ was written for this script.
 DISCLAIMER
 
 # Descomentar para activar debug
-debug=true
+# debug=true
 if [ "${debug:=}" = true ]; then
   exec > >(tee -a -i "${0%.*}.log") 2>&1
   set -x
