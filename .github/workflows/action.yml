@@ -10,8 +10,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build images
         run: |
-          for distro in debian raspios; do
-            for arch in arm64 armhf; do
+          for distro in debian; do
+            for arch in arm64; do
               echo "OS=$distro" > config.txt
               echo "ARCHITECTURE=$arch" >> config.txt
               echo "COMPRESS=xz" >> config.txt
@@ -27,7 +27,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           name: ${{ steps.vars.outputs.tag }}
-          draft: true
+          #draft: true
           files: |
             debian-buster-lite-arm64.img.xz
             debian-buster-lite-armhf.img.xz
