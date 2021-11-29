@@ -14,6 +14,7 @@ jobs:
             for arch in arm64 armhf; do
               echo "OS=$distro" > config.txt
               echo "ARCHITECTURE=$arch" >> config.txt
+              echo "COMPRESS=xz" >> config.txt
               sudo ./rpi-img-builder.sh
             done
           done
