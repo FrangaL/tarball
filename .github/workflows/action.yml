@@ -15,6 +15,7 @@ jobs:
               echo "OS=$distro" > config.txt
               echo "ARCHITECTURE=$arch" >> config.txt
               echo "COMPRESS=xz" >> config.txt
+              echo "VARIANT=slim" >> config.txt
               sudo ./rpi-img-builder.sh
             done
           done
