@@ -27,9 +27,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           name: ${{ steps.vars.outputs.tag }}
-          #draft: true
-          files: |
-            debian-buster-slim-arm64.img.xz
+          draft: true
+          files: debian-buster-slim-arm64.img.xz
             #debian-buster-lite-armhf.img.xz
             #raspios-buster-lite-arm64.img.xz
             #raspios-buster-lite-armhf.img.xz
