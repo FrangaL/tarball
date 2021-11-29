@@ -12,8 +12,8 @@ jobs:
         run: |
           for distro in debian raspios; do
             for arch in arm64 armhf; do
-              echo 'OS=$distro' > config.txt
-              echo 'ARCHITECTURE=$arch' >> config.txt
+              echo "OS=$distro" > config.txt
+              echo "ARCHITECTURE=$arch" >> config.txt
               sudo ./rpi-img-builder.sh
             done
           done
