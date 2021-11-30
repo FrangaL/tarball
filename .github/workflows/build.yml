@@ -51,6 +51,7 @@ jobs:
           ARCH: ["arm64", "armhf"]
           VARIANT: ["slim", "lite"]
       name: rpi-builder
+      needs: job1
       steps:
         - uses: actions/checkout@v2
           with:
