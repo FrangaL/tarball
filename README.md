@@ -2,7 +2,7 @@
 
 
 <a id="downloadlinks"></a>System OS | Variant / Architecture | Image
-:--- | ---: | ---:
+:--- | :--- | ---:
 Debian Buster | slim / 64-bit | [debian-buster-slim-arm64.img.xz](https://github.com/FrangaL/rpi-img-builder/releases/download/v1.0.0/debian-buster-slim-arm64.img.xz)
 Debian Buster | slim / 32-bit | [debian-buster-slim-armhf.img.xz](https://github.com/FrangaL/rpi-img-builder/releases/download/v1.0.0/debian-buster-slim-armhf.img.xz)
 Debian Buster | lite / 64-bit | [debian-buster-lite-arm64.img.xz](https://github.com/FrangaL/rpi-img-builder/releases/download/v1.0.0/debian-buster-lite-arm64.img.xz)
