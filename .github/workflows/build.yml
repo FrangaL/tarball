@@ -1,7 +1,8 @@
 name: rpi image builder
 on:
-  release:
-    types: [created, edited]
+  push:
+    branches:    
+      - 'releases/**'
 
 jobs:
   make-image:
