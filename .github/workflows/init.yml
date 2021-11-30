@@ -21,6 +21,8 @@ jobs:
         with:
           delete_release: true
           tag_name: v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}  
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

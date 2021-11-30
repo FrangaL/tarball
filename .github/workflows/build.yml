@@ -1,6 +1,9 @@
 name: rpi image builder
-
-on: [push, pull_request]
+on:
+  workflow_run:
+    workflows: ["Make release"]
+    types:
+      - completed
 
 jobs:
   make-image:
