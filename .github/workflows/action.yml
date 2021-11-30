@@ -8,6 +8,12 @@ on:
 jobs:
   make-image:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        DISTRO: ["debian", "raspios"]
+        SUITE: ["buster", "bullseye"]
+        ARCH: ["arm64", "armhf"]
+        VARIANT: ["slim", "lite"]
     name: rpi-builder
     steps:
       - uses: actions/checkout@v2
@@ -15,15 +21,12 @@ jobs:
           fetch-depth: 0
       - name: Build images
         run: |
-          for distro in debian raspios; do
-            for arch in arm64 armhf; do
-              echo "OS=$distro" > config.txt
-              echo "ARCHITECTURE=$arch" >> config.txt
+              echo "OS=${{ matrix.DISTRO }}" > config.txt
+              echo "ARCHITECTURE=${{ matrix.ARCH }}" >> config.txt
               echo "COMPRESS=xz" >> config.txt
-              echo "VARIANT=slim" >> config.txt
+              echo "SUITE=${{ matrix.SUITE }}" >> config.txt
+              echo "VARIANT=${{ matrix.VARIANT }}" >> config.txt
               sudo ./rpi-img-builder.sh
-            done
-          done
       - name: Get Tag
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
@@ -34,7 +37,4 @@ jobs:
           name: ${{ steps.vars.outputs.tag }}
           draft: false
           files: |
-            debian-buster-slim-arm64.img.xz
-            debian-buster-slim-armhf.img.xz
-            raspios-buster-slim-arm64.img.xz
-            raspios-buster-slim-armhf.img.xz
+            ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.xz
