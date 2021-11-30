@@ -19,6 +19,7 @@ jobs:
               sudo ./rpi-img-builder.sh
             done
           done
+          ls
       - name: Get Tag
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
