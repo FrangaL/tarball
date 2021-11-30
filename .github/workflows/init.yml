@@ -1,15 +1,5 @@
 name: Make release
-on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
-  pull_request:
-    paths-ignore:
-    - '**.md'
-  schedule:
-    - cron: '10 1 * * 0'
+on: push
 jobs:
   tags:
     name: Create Release
