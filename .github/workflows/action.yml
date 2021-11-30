@@ -1,9 +1,6 @@
 name: rpi image builder
 
-on:
-  push:
-    tags:
-      - 'v*'
+on: [push, pull_request]
 
 jobs:
   make-image:
