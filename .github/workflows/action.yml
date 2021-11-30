@@ -1,10 +1,10 @@
 name: rpi image builder
 
 on: push
-  tags:
-    - "v*.*.*"
   paths-ignore:
     - '**.md'
+  tags:
+    - "v*.*.*"
 
 jobs:
   make-image:
