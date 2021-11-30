@@ -8,7 +8,6 @@ jobs:
     name: rpi-builder
     steps:
       - uses: actions/checkout@v2
-        fetch-depth: 0
       - name: Build images
         run: |
           for distro in debian raspios; do
