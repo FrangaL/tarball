@@ -1,11 +1,46 @@
 name: rpi image builder
+#on:
+#  workflow_run:
+#    workflows: ["Make release"]
+#    types:
+#      - completed
 on:
-  workflow_run:
-    workflows: ["Make release"]
-    types:
-      - completed
-
-jobs:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+    - '**.md'
+job1:
+  tags:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+        with:
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+job2:
   make-image:
     runs-on: ubuntu-latest
     strategy:
