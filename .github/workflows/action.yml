@@ -32,6 +32,6 @@ jobs:
           draft: false
           files: |
             debian-buster-slim-arm64.img.xz
-            debian-buster-lite-armhf.img.xz
-            raspios-buster-lite-arm64.img.xz
-            raspios-buster-lite-armhf.img.xz
+            debian-buster-slim-armhf.img.xz
+            raspios-buster-slim-arm64.img.xz
+            raspios-buster-slim-armhf.img.xz
