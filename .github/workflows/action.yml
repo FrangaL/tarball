@@ -1,6 +1,10 @@
 name: rpi image builder
 
-on: [push, pull_request]
+on: push
+  tags:
+    - "v*.*.*"
+  paths-ignore:
+    - '**.md'
 
 jobs:
   make-image:
@@ -21,9 +25,9 @@ jobs:
               sudo ./rpi-img-builder.sh
             done
           done
-      - name: Get Tag
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+#      - name: Get Tag
+#        id: vars
+#        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         #if: startsWith(github.ref, 'refs/tags/')
