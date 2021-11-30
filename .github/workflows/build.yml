@@ -28,7 +28,7 @@ jobs:
               echo "VARIANT=${{ matrix.VARIANT }}" >> config.txt
               sudo ./rpi-img-builder.sh
       - name: Publish Release
-      - uses: "marvinpinto/action-automatic-releases@latest"
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUBTOKEN }}"
           automatic_release_tag: "v1.0.0"
