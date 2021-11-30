@@ -19,15 +19,15 @@ jobs:
       name: Create Release
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout code
+          name: Checkout code
           uses: actions/checkout@v2
-        - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+          uses: dev-drprasad/delete-tag-and-release@v0.2.0
           with:
             delete_release: true
             tag_name: v1.0.0
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-        - name: Create Release
+          name: Create Release
           id: create_release
           uses: actions/create-release@v1
           env:
