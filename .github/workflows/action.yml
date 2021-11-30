@@ -21,7 +21,7 @@ jobs:
               echo "OS=${{ matrix.DISTRO }}" > config.txt
               echo "ARCHITECTURE=${{ matrix.ARCH }}" >> config.txt
               echo "COMPRESS=xz" >> config.txt
-              echo "SUITE=${{ matrix.SUITE }}" >> config.txt
+              echo "RELEASE=${{ matrix.SUITE }}" >> config.txt
               echo "VARIANT=${{ matrix.VARIANT }}" >> config.txt
               sudo ./rpi-img-builder.sh
       - name: Get Tag
