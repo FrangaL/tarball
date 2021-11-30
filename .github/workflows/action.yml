@@ -8,9 +8,10 @@ jobs:
     name: rpi-builder
     steps:
       - uses: actions/checkout@v2
+        fetch-depth: 0
       - name: Build images
         run: |
-          for distro in debian; do
+          for distro in debian raspios; do
             for arch in arm64; do
               echo "OS=$distro" > config.txt
               echo "ARCHITECTURE=$arch" >> config.txt
@@ -19,7 +20,6 @@ jobs:
               sudo ./rpi-img-builder.sh
             done
           done
-          ls
       - name: Get Tag
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
@@ -28,8 +28,9 @@ jobs:
         #if: startsWith(github.ref, 'refs/tags/')
         with:
           name: ${{ steps.vars.outputs.tag }}
-          draft: true
-          files: debian-buster-slim-arm64.img.xz
-            #debian-buster-lite-armhf.img.xz
-            #raspios-buster-lite-arm64.img.xz
-            #raspios-buster-lite-armhf.img.xz
+          draft: false
+          files: |
+            debian-buster-slim-arm64.img.xz
+            debian-buster-lite-armhf.img.xz
+            raspios-buster-lite-arm64.img.xz
+            raspios-buster-lite-armhf.img.xz
