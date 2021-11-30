@@ -8,10 +8,12 @@ jobs:
     name: rpi-builder
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Build images
         run: |
           for distro in debian raspios; do
-            for arch in arm64; do
+            for arch in arm64 armhf; do
               echo "OS=$distro" > config.txt
               echo "ARCHITECTURE=$arch" >> config.txt
               echo "COMPRESS=xz" >> config.txt
