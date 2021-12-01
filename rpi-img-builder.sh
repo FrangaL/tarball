@@ -585,6 +585,7 @@ fi
 # Crear manifiesto
 if [[ "$MANIFEST" == "true" ]]; then
 systemd-nspawn_exec dpkg-query -f '${Package} ${Version}\n' -W > /${IMGNAME}.manifest
+systemd-nspawn_exec ls /
 cp $R/$IMGNAME.manifest $IMGNAME.manifest
 rm -f $R/$IMGNAME.manifest
 fi
