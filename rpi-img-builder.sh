@@ -516,33 +516,23 @@ fi
 
 # Raspberry PI userland tools
 if [[ "$OS" == "debian" && "$VARIANT" == "lite" ]]; then
-  git clone --depth 1 https://github.com/raspberrypi/userland.git "$R"/userland
-  cat <<EOF >"$R"/userland/compile.sh
-#!/bin/bash -e
-dpkg --get-selections > /bkp-packages
-apt-get install -y cmake make g++ pkg-config git-core
-mkdir /userland/build
-pushd /userland/build
-cmake -DCMAKE_TOOLCHAIN_FILE="makefiles/cmake/toolchains/${LIB_ARCH}.cmake" \
--DCMAKE_BUILD_TYPE=release -DALL_APPS=OFF $CMAKE_ARM ../
-make -j$(nproc) 2>/dev/null
-make install
-echo -e "/opt/vc/lib" > /etc/ld.so.conf.d/userland.conf
-cat <<\EOT > /etc/profile.d/userland.sh
+  git clone --depth 1 https://github.com/raspberrypi/userland.git
+  apt-get install -y cmake make g++ pkg-config git-core
+  mkdir -p "$CURRENT_DIR"/userland/build
+  pushd "$CURRENT_DIR"/userland/build
+  cmake -DCMAKE_TOOLCHAIN_FILE="makefiles/cmake/toolchains/"${LIB_ARCH}".cmake" \
+  -DCMAKE_BUILD_TYPE=release -DALL_APPS=OFF "$CMAKE_ARM" ../
+  make -j$(nproc) 2>/dev/null
+  mkdir -p "$R"/opt/vc
+  mv {bin,lib,inc} "$R"/opt/vc
+  cd "$CURRENT_DIR"
+  echo -e "/opt/vc/lib" > "$R"/etc/ld.so.conf.d/userland.conf
+  cat <<\EOT > "$R"/etc/profile.d/userland.sh
 [ -d /opt/vc/bin ] && PATH=\$PATH:/opt/vc/bin
 export PATH
 EOT
-chmod +x /etc/profile.d/userland.sh
-ldconfig
-# Limpiar el sistema de paquetes innecesarios.
-dpkg --clear-selections
-dpkg --set-selections < /bkp-packages
-apt-get -y dselect-upgrade
-apt-get -y remove --purge \$(dpkg -l | grep "^rc" | awk '{print \$2}')
-EOF
-  chmod +x "$R"/userland/compile.sh
-  systemd-nspawn_exec /userland/compile.sh
-
+  chmod +x "$R"/etc/profile.d/userland.sh
+  systemd-nspawn_exec ldconfig
   # Reglas udev Raspberry PI
   cat <<\EOF >"$R"/etc/udev/rules.d/55-rpi.rules
 SUBSYSTEM=="vchiq",GROUP="video",MODE="0660"
@@ -571,9 +561,7 @@ if [ -n "$PROXY_URL" ]; then
 fi
 find "$R"/var/log -depth -type f -print0 | xargs -0 truncate -s 0
 rm -f "$R"/usr/bin/qemu*
-rm -f "$R"/bkp-packages
-rm -rf "$R"/userland
-rm -rf "$R"/opt/vc/src
+rm -rf userland
 if [[ "$VARIANT" == "slim" ]]; then
   systemd-nspawn_exec apt-get -y remove --purge wget tasksel
   find "$R"/usr/share/doc -depth -type f ! -name copyright -print0 | xargs -0 rm
@@ -585,8 +573,8 @@ fi
 # Crear manifiesto
 if [[ "$MANIFEST" == "true" ]]; then
   systemd-nspawn_exec sh -c "dpkg-query -f '\${Package} \${Version}\n' -W > /${IMGNAME}.manifest"
-  cp $R/$IMGNAME.manifest $IMGNAME.manifest
-  rm -f $R/$IMGNAME.manifest
+  cp "$R/$IMGNAME".manifest "$IMGNAME".manifest
+  rm -f "$R/$IMGNAME".manifest
 fi
 echo "nameserver $DNS" >"$R"/etc/resolv.conf
 rm -rf "$R"/etc/apt/apt.conf.d/99_norecommends
@@ -639,7 +627,6 @@ rsync -aHAXx --exclude boot "${R}/" "${MOUNTDIR}/"
 rsync -rtx "${R}/boot" "${MOUNTDIR}/" && sync
 
 # Desmontar sistema de archivos y eliminar compilación
-
 umount -l "$MOUNTDIR/$BOOT"
 umount -l "$MOUNTDIR"
 rm -rf "$BASEDIR"
