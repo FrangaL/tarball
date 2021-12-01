@@ -15,24 +15,20 @@ jobs:
     name: rpi-builder
     steps:
       - uses: actions/checkout@v2
-        env:
-          DISTRO: ${{ matrix.DISTRO }}
-          SUITE: ${{ matrix.SUITE }}
-          ARCH: ${{ matrix.ARCH }}
-          VARIANT: ${{ matrix.VARIANT }}
       - name: Build images
         run: |
-              echo "OS=$DISTRO" > config.txt
-              echo "ARCHITECTURE=$ARCH" >> config.txt
-              echo "RELEASE=$SUITE" >> config.txt
-              echo "VARIANT=$VARIANT" >> config.txt
+              echo "OS=${{ matrix.DISTRO }}" > config.txt
+              echo "ARCHITECTURE=${{ matrix.ARCH }}" >> config.txt
+              echo "RELEASE=${{ matrix.SUITE }}" >> config.txt
+              echo "VARIANT=${{ matrix.VARIANT }}" >> config.txt
               echo "COMPRESS=xz" >> config.txt
               echo "MANIFEST=true" >> config.txt
               sudo ./rpi-img-builder.sh
-              sha256sum $DISTRO-$SUITE-$VARIANT-$ARCH.img.xz > $DISTRO-$SUITE-$VARIANT-$ARCH.img.sha256
+              sha256sum ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.xz \
+                > ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.sha256
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ steps.vars.outputs.tag }}
           draft: false
-          files: $DISTRO-$SUITE-$VARIANT-$ARCH.img.*
+          files: ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.*
