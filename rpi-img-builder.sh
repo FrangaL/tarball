@@ -8,7 +8,7 @@ was written for this script.
 DISCLAIMER
 
 # Descomentar para activar debug
-debug=true
+# debug=true
 if [ "${debug:=}" = true ]; then
   exec > >(tee -a -i "${0%.*}.log") 2>&1
   set -x
@@ -109,16 +109,15 @@ installdeps() {
   done
 }
 
-status " - Actualizando repositorio apt ..."
+status "Actualizando repositorio apt ..."
 apt-get update || apt-get update
-status " - Instando dependencias necesarias ..."
+status "Instando dependencias necesarias ..."
 DEPS="binfmt-support dosfstools qemu-user-static rsync wget lsof git parted dirmngr e2fsprogs \
 systemd-container debootstrap xz-utils kmod udev dbus gnupg gnupg-utils debian-archive-keyring"
 installdeps
 
 # Checkear versión mínima debootstrap
-DEBOOTSTRAP_VER=$(debootstrap --version | grep -o '[0-9.]\+' | head -1)
-if dpkg --compare-versions "$DEBOOTSTRAP_VER" lt "1.0.105"; then
+if $(dpkg-query -f '${Version}' -W debootstrap) lt "1.0.105"; then
   echo "Actualmente su versión de debootstrap no soporta el script" >&2
   echo "Actualice debootstrap, versión mínima 1.0.105" >&2
   exit 1
@@ -406,7 +405,7 @@ status "Activar servicios generate-ssh-host-keys y rpi-resizerootfs"
 #echo | sed -e '/^#/d ; /^ *$/d' | systemd-nspawn_exec <<\EOF
 status "Activar servicio redimendionado partición root"
 systemd-nspawn_exec systemctl enable rpi-resizerootfs.service
-status "ctivar servicio generación ket SSH"
+status "Activar servicio generación ket SSH"
 systemd-nspawn_exec systemctl enable generate-ssh-host-keys.service
 #EOF
 
@@ -574,8 +573,8 @@ fi
 # Crear manifiesto
 if [[ "$MANIFEST" == "true" ]]; then
   systemd-nspawn_exec sh -c "dpkg-query -f '\${Package} \${Version}\n' -W > /${IMGNAME}.manifest"
-  cp "$R/$IMGNAME".manifest "$IMGNAME".manifest
-  rm -f "$R/$IMGNAME".manifest
+  cp $R/$IMGNAME.manifest $IMGNAME.manifest
+  rm -f $R/$IMGNAME.manifest
 fi
 echo "nameserver $DNS" >"$R"/etc/resolv.conf
 rm -rf "$R"/etc/apt/apt.conf.d/99_norecommends
@@ -646,7 +645,7 @@ fi
 blockdev --flushbufs "${LOOPDEVICE}"
 losetup -d "${LOOPDEVICE}"
 
-[[ "$COMPRESS" =~ (gzip|xz) ]] && log "Comprimir imagen" white
+[[ "$COMPRESS" =~ (gzip|xz) ]] && log "Comprimiendo imagen ..." white
 if [[ "$COMPRESS" == "gzip" ]]; then
   gzip "${IMGNAME}"
   chmod 664 "${IMGNAME}.gz"
