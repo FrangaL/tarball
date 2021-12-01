@@ -27,6 +27,9 @@ jobs:
               echo "COMPRESS=xz" >> config.txt
               echo "MANIFEST=true" >> config.txt
               sudo ./rpi-img-builder.sh
+              shasum -a 256 \
+                ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.xz \
+                > ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.sha256
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
@@ -34,4 +37,5 @@ jobs:
           draft: false
           files: |
             ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.xz
+            ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.sha256
             ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.manifest

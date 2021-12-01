@@ -584,10 +584,9 @@ if [[ "$VARIANT" == "slim" ]]; then
 fi
 # Crear manifiesto
 if [[ "$MANIFEST" == "true" ]]; then
-systemd-nspawn_exec sh -c "dpkg-query -f '\${Package} \${Version}\n' -W > /${IMGNAME}.manifest"
-systemd-nspawn_exec ls /
-cp $R/$IMGNAME.manifest $IMGNAME.manifest
-rm -f $R/$IMGNAME.manifest
+  systemd-nspawn_exec sh -c "dpkg-query -f '\${Package} \${Version}\n' -W > /${IMGNAME}.manifest"
+  cp $R/$IMGNAME.manifest $IMGNAME.manifest
+  rm -f $R/$IMGNAME.manifest
 fi
 echo "nameserver $DNS" >"$R"/etc/resolv.conf
 rm -rf "$R"/etc/apt/apt.conf.d/99_norecommends
