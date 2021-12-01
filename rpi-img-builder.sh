@@ -517,7 +517,8 @@ fi
 # Raspberry PI userland tools
 if [[ "$OS" == "debian" && "$VARIANT" == "lite" ]]; then
   git clone --depth 1 https://github.com/raspberrypi/userland.git
-  apt-get install -y cmake make g++ pkg-config git-core aarch64-linux-gnu-gcc aarch64-linux-gnu-g++
+  DEPS="crossbuild-essential-${ARCHITECTURE} cmake make g++ pkg-config"
+  installdeps
   mkdir -p "$CURRENT_DIR"/userland/build
   pushd "$CURRENT_DIR"/userland/build
   cmake -DCMAKE_TOOLCHAIN_FILE="makefiles/cmake/toolchains/"${LIB_ARCH}".cmake" \
