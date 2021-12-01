@@ -1,6 +1,6 @@
 # tarball
 [![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
-
+[![CodeFactor](https://www.codefactor.io/repository/github/frangal/rpi-img-builder/badge/master)](https://www.codefactor.io/repository/github/frangal/rpi-img-builder/overview/master)
 
 
 OS | Variant | Arch | Download image url | Hash
