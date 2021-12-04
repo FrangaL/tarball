@@ -112,7 +112,7 @@ installdeps() {
 status "Actualizando repositorio apt ..."
 apt-get update || apt-get update
 status "Instando dependencias necesarias ..."
-DEPS="dosfstools rsync wget lsof git parted dirmngr e2fsprogs \
+DEPS="binfmt-support qemu-user-static dosfstools rsync wget lsof git parted dirmngr e2fsprogs \
 systemd-container debootstrap xz-utils kmod udev dbus gnupg gnupg-utils debian-archive-keyring"
 installdeps
 
