@@ -174,13 +174,14 @@ if [[ "${OS}" == "debian" ]]; then
   MIRROR=$DEB_MIRROR
   BOOTSTRAP_URL=$MIRROR
   KEYRING=/usr/share/keyrings/debian-archive-keyring.gpg
+  RASPI_FIRMWARE="raspi-firmware"
   # Seleccionar kernel y bootloader
   case ${OS}+${ARCHITECTURE} in
     debian*arm64)
-      KERNEL_IMAGE="linux-image-arm64/buster-backports raspi-firmware/buster-backports"
+      KERNEL_IMAGE="linux-image-arm64"
       ;;
     debian*armhf)
-      KERNEL_IMAGE="linux-image-armmp/buster-backports raspi-firmware/buster-backports"
+      KERNEL_IMAGE="linux-image-armmp"
       ;;
   esac
 elif [[ "${OS}" == "raspios" ]]; then
@@ -360,6 +361,8 @@ fi
 # Usar firmware-brcm80211/buster-backports en Debian
 if [[ "${OS}-${RELEASE}" == "debian-buster" ]]; then
   FIRMWARES="${FIRMWARES}/buster-backports"
+  KERNEL_IMAGE="${KERNEL_IMAGE}/buster-backports"
+  RASPI_FIRMWARE="${RASPI_FIRMWARE}/buster-backports"
 fi
 
 systemd-nspawn_exec apt-get update
