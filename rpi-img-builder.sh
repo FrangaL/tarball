@@ -368,7 +368,7 @@ if [ -n "$ADDPKG" ]; then
 fi
 
 # Usar firmware-brcm80211/buster-backports en Debian
-if [[ "${OS}" == "debian" ]]; then
+if [[ "${OS}" == "debian"  && "$RELEASE" == "buster" ]]; then
   FIRMWARES="${FIRMWARES}/buster-backports"
 fi
 
