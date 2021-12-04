@@ -271,11 +271,10 @@ if [ "$OS" = "debian" ]; then
     echo "deb ${MIRROR/deb./security.}-security/ ${RELEASE}-security $COMPONENTS" >>"$R"/etc/apt/sources.list
   fi
 elif [ "$OS" = "raspios" ]; then
+  echo "deb $MIRROR $RELEASE $COMPONENTS" >"$R"/etc/apt/sources.list
   if [ "$ARCHITECTURE" = "arm64" ]; then
-    echo "deb $DEB_MIRROR $RELEASE $COMPONENTS" >"$R"/etc/apt/sources.list
     echo "deb ${MIRROR_PIOS/raspbian/debian} $RELEASE main" >"$R"/etc/apt/sources.list.d/raspi.list
   elif [ "$ARCHITECTURE" = "armhf" ]; then
-    echo "deb $MIRROR $RELEASE $COMPONENTS" >"$R"/etc/apt/sources.list
     MIRROR=${PIOS_MIRROR/raspbian./archive.}
     echo "deb ${MIRROR/raspbian/debian} $RELEASE main" >"$R"/etc/apt/sources.list.d/raspi.list
   fi
