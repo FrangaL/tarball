@@ -224,7 +224,7 @@ fi
 
 status "debootstrap first stage"
 debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
-  --keyring=$KEYRING --variant - --include="${MINPKGS// /,}" "$RELEASE" "$R" $BOOTSTRAP_URL || cat "$R"/debootstrap/debootstrap.log
+  --keyring=$KEYRING --variant - --include="${MINPKGS// /,}" "$RELEASE" "$R" $BOOTSTRAP_URL
 
 cat >"$R"/etc/apt/apt.conf.d/99_norecommends <<EOF
 APT::Install-Recommends "false";
