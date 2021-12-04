@@ -257,32 +257,27 @@ fi
 
 status "debootstrap second stage"
 systemd-nspawn_exec /debootstrap/debootstrap --second-stage
-
+cat "$R"/etc/apt/sources.list
 # Definir sources.list
 if [ "$OS" = "debian" ]; then
-  echo "APT::Default-Release \"$RELEASE\";" >"$R"/etc/apt/apt.conf
-  echo -e "\
-  deb $MIRROR $RELEASE $COMPONENTS\n\
-  deb $MIRROR $RELEASE-updates $COMPONENTS\n\
-  " >"$R"/etc/apt/sources.list
+  echo "deb $MIRROR $RELEASE $COMPONENTS" >"$R"/etc/apt/sources.list
   if [ "$RELEASE" = "buster" ]; then
+    echo "APT::Default-Release \"$RELEASE\";" >"$R"/etc/apt/apt.conf
+    echo "deb $MIRROR $RELEASE/updates $COMPONENTS" >>"$R"/etc/apt/sources.list
     echo "deb $MIRROR $RELEASE-backports $COMPONENTS" >>"$R"/etc/apt/sources.list
     echo "deb ${MIRROR}-security/ ${RELEASE}/security $COMPONENTS" >>"$R"/etc/apt/sources.list
   elif [ "$RELEASE" == "bullseye" ]; then
+    echo "deb $MIRROR $RELEASE-updates $COMPONENTS" >>"$R"/etc/apt/sources.list
     echo "deb ${MIRROR/deb./security.}-security/ ${RELEASE}-security $COMPONENTS" >>"$R"/etc/apt/sources.list
   fi
 elif [ "$OS" = "raspios" ]; then
   if [ "$ARCHITECTURE" = "arm64" ]; then
     echo "deb $DEB_MIRROR $RELEASE $COMPONENTS" >"$R"/etc/apt/sources.list
-    echo "#deb-src $DEB_MIRROR $RELEASE $COMPONENTS" >>"$R"/etc/apt/sources.list
     echo "deb ${MIRROR_PIOS/raspbian/debian} $RELEASE main" >"$R"/etc/apt/sources.list.d/raspi.list
-    echo "#deb-src ${MIRROR_PIOS/raspbian/debian} $RELEASE main" >>"$R"/etc/apt/sources.list.d/raspi.list
   elif [ "$ARCHITECTURE" = "armhf" ]; then
     echo "deb $MIRROR $RELEASE $COMPONENTS" >"$R"/etc/apt/sources.list
-    echo "#deb-src $MIRROR $RELEASE $COMPONENTS" >>"$R"/etc/apt/sources.list
     MIRROR=${PIOS_MIRROR/raspbian./archive.}
     echo "deb ${MIRROR/raspbian/debian} $RELEASE main" >"$R"/etc/apt/sources.list.d/raspi.list
-    echo "#deb-src ${MIRROR/raspbian/debian} $RELEASE main" >>"$R"/etc/apt/sources.list.d/raspi.list
   fi
 fi
 
