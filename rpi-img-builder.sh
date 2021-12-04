@@ -267,7 +267,7 @@ if [ "$OS" = "debian" ]; then
   " >"$R"/etc/apt/sources.list
   if [ "$RELEASE" = "buster" ]; then
     echo "deb $MIRROR $RELEASE-backports $COMPONENTS" >>"$R"/etc/apt/sources.list
-    echo "deb ${MIRROR/deb./security.}-security/ ${RELEASE}/security $COMPONENTS" >>"$R"/etc/apt/sources.list
+    echo "deb ${MIRROR}-security/ ${RELEASE}/security $COMPONENTS" >>"$R"/etc/apt/sources.list
   elif [ "$RELEASE" == "bullseye" ]; then
     echo "deb ${MIRROR/deb./security.}-security/ ${RELEASE}-security $COMPONENTS" >>"$R"/etc/apt/sources.list
   fi
