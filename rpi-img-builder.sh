@@ -263,13 +263,12 @@ if [ "$OS" = "debian" ]; then
   echo "APT::Default-Release \"$RELEASE\";" >"$R"/etc/apt/apt.conf
   echo -e "\
   deb $MIRROR $RELEASE $COMPONENTS\n\
-  #deb-src $MIRROR $RELEASE $COMPONENTS\n\
-  deb $MIRROR-security/ $RELEASE/updates $COMPONENTS\n\
-  #deb-src $MIRROR-security/ $RELEASE/updates $COMPONENTS\n\
+  deb ${MIRROR/deb./security.}-security/ ${RELEASE}-security $COMPONENTS\n\
   deb $MIRROR $RELEASE-updates $COMPONENTS\n\
-  #deb-src $MIRROR $RELEASE-updates $COMPONENTS\n\
-  deb $MIRROR $RELEASE-backports $COMPONENTS\n\
   " >"$R"/etc/apt/sources.list
+  if [ "$RELEASE" = "buster" ]; then
+    echo -e "deb $MIRROR $RELEASE-backports $COMPONENTS" >>"$R"/etc/apt/sources.list
+  fi
 elif [ "$OS" = "raspios" ]; then
   if [ "$ARCHITECTURE" = "arm64" ]; then
     echo "deb $DEB_MIRROR $RELEASE $COMPONENTS" >"$R"/etc/apt/sources.list
