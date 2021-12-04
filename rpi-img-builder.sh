@@ -162,7 +162,7 @@ systemd-nspawn_exec() {
 
 # Base debootstrap
 COMPONENTS="main contrib non-free"
-MINPKGS="ifupdown openresolv net-tools init dbus rsyslog cron wget gnupg"
+MINPKGS="ifupdown openresolv net-tools init dbus rsyslog cron wget gnupg libc-bin"
 EXTRAPKGS="openssh-server parted locales dosfstools sudo libterm-readline-gnu-perl"
 FIRMWARES="firmware-misc-nonfree firmware-atheros firmware-realtek firmware-libertas firmware-brcm80211"
 WIRELESSPKGS="wpasupplicant crda wireless-tools rfkill wireless-regdb"
