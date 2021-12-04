@@ -20,7 +20,8 @@ jobs:
               sudo apt-get update
               sudo apt-get install wget
               wget http://ftp.us.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.126+nmu1_all.deb
-              sudo dpkg -i debootstrap_1.0.126+nmu1_all.deb
+              wget http://ftp.us.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2021.1.1_all.deb
+              sudo dpkg -i debootstrap_1.0.126+nmu1_all.deb debian-archive-keyring_2021.1.1_all.deb
               echo "OS=${{ matrix.DISTRO }}" > config.txt
               echo "ARCHITECTURE=${{ matrix.ARCH }}" >> config.txt
               echo "RELEASE=${{ matrix.SUITE }}" >> config.txt
