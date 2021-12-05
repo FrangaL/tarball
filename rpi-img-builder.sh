@@ -190,9 +190,9 @@ elif [[ "${OS}" == "raspios" ]]; then
     raspios*arm64)
       MIRROR=$PIOS_MIRROR
       MIRROR_PIOS=${MIRROR/raspbian./archive.}
-      KEYRING=/usr/share/keyrings/raspberrypi-archive-keyring.gpg
+      KEYRING=/usr/share/keyrings/debian-archive-keyring.gpg
       GPG_KEY=$PIOS_KEY
-      BOOTSTRAP_URL=${MIRROR_PIOS/raspbian/debian}
+      BOOTSTRAP_URL=$DEB_MIRROR
       ;;
     raspios*armhf)
       MIRROR=$RASP_MIRROR
