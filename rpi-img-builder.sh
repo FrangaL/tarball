@@ -277,13 +277,13 @@ case ${OS}+${RELEASE}+${ARCHITECTURE} in
 esac
 
 # Instalar archive-keyring en PiOS
-if [ "$OS" = "raspios" ]; then
-  [ "$RELEASE" = "bullseye" ] && RASP_KEY="82B129927FA3303E"
-  systemd-nspawn_exec <<EOF
-  apt-key adv --keyserver-options timeout=10 --keyserver $KEY_SRV --recv-keys $PIOS_KEY
-  apt-key adv --keyserver-options timeout=10 --keyserver $KEY_SRV --recv-keys $RASP_KEY
-EOF
-fi
+#if [ "$OS" = "raspios" ]; then
+#  [ "$RELEASE" = "bullseye" ] && RASP_KEY="82B129927FA3303E"
+#  systemd-nspawn_exec <<EOF
+#  apt-key adv --keyserver-options timeout=10 --keyserver $KEY_SRV --recv-keys $PIOS_KEY
+#  apt-key adv --keyserver-options timeout=10 --keyserver $KEY_SRV --recv-keys $RASP_KEY
+#EOF
+#fi
 
 # Habilitar apt proxy http en contenedor
 if [ -n "$PROXY_URL" ]; then
