@@ -358,7 +358,7 @@ if [ -n "$ADDPKG" ]; then
   INCLUDEPKGS="${ADDPKG} ${INCLUDEPKGS}"
 fi
 
-# Usar firmware-brcm80211/buster-backports en Debian
+# Usar buster-backports en Debian
 if [[ "${OS}-${RELEASE}" == "debian-buster" ]]; then
   FIRMWARES="${FIRMWARES}/buster-backports"
   KERNEL_IMAGE="${KERNEL_IMAGE}/buster-backports"
