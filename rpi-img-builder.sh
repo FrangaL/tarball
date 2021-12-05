@@ -190,9 +190,9 @@ elif [[ "${OS}" == "raspios" ]]; then
     raspios*arm64)
       MIRROR=$PIOS_MIRROR
       MIRROR_PIOS=${MIRROR/raspbian./archive.}
-      KEYRING=/usr/share/keyrings/debian-archive-keyring.gpg
+      KEYRING=/usr/share/keyrings/raspberrypi-archive-keyring.gpg
       GPG_KEY=$PIOS_KEY
-      BOOTSTRAP_URL=$DEB_MIRROR
+      BOOTSTRAP_URL=${MIRROR_PIOS/raspbian/debian}
       ;;
     raspios*armhf)
       MIRROR=$RASP_MIRROR
@@ -225,7 +225,7 @@ fi
 status "debootstrap first stage"
 sed -i'.bkp' 's/^keyring/keyring $KEYRING\ndefault_mirror $BOOTSTRAP_URL\n#/' /usr/share/debootstrap/scripts/sid
 debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
-  --keyring=$KEYRING --variant - --include="${MINPKGS// /,}" "$RELEASE" "$R" $BOOTSTRAP_URL
+  --keyring=$KEYRING --variant - "$RELEASE" "$R" $BOOTSTRAP_URL
 mv /usr/share/debootstrap/scripts/sid{.bkp,}
 
 cat >"$R"/etc/apt/apt.conf.d/99_norecommends <<EOF
@@ -371,7 +371,7 @@ elif [[ "${OS}-${RELEASE}" == "debian-bullseye" ]]; then
 fi
 
 systemd-nspawn_exec apt-get update
-systemd-nspawn_exec apt-get install -y ${FIRMWARES}
+systemd-nspawn_exec apt-get install -y ${FIRMWARES} $MINPKGS
 
 # Disable suspend/resume - speeds up boot massively
 mkdir -p "${R}/etc/initramfs-tools/conf.d/"
