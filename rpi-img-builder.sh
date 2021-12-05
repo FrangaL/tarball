@@ -380,12 +380,13 @@ if [ "$OS" = raspios ]; then
   cat <<-EOM >"${R}"${BOOT}/cmdline.txt
   net.ifnames=0 dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootwait
 EOM
-elif [ "$ARCHITECTURE" = "arm64" ]; then
-  echo "arm_64bit=1" >>"$R"/"${BOOT}"/config.txt
 elif [ "$OS" = debian ]; then
-  cat <<-EOM >"${R}"${BOOT}/cmdline.txt
+  mkdir -p "${R}/${BOOT}/"
+  cat <<-EOM >"${R}/${BOOT}"/cmdline.txt
   net.ifnames=0 console=tty1 root=/dev/mmcblk0p2 rw  rootwait
 EOM
+elif [ "$ARCHITECTURE" = "arm64" ]; then
+  echo "arm_64bit=1" >>"$R"/"${BOOT}"/config.txt
 fi
 echo "hdmi_force_hotplug=1" >>"$R"/"${BOOT}"/config.txt
 
