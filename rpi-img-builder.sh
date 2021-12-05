@@ -222,8 +222,7 @@ elif [[ "$APT_CACHER" =~ (apt-cacher-ng|root) ]]; then
   fi
 fi
 
-sed -i 's/keyring \/usr\/share\/keyrings\/debian-archive-keyring.gpg/keyring $KEYRING\ndefault_mirror $BOOTSTRAP_URL/' \
-  /usr/share/debootstrap/scripts/sid
+sed -i 's/^keyring/keyring $KEYRING\ndefault_mirror $BOOTSTRAP_URL/' /usr/share/debootstrap/scripts/sid
 
 status "debootstrap first stage"
 debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
