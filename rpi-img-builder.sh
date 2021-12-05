@@ -222,6 +222,26 @@ elif [[ "$APT_CACHER" =~ (apt-cacher-ng|root) ]]; then
   fi
 fi
 
+cat >"/usr/share/debootstrap/scripts/sid" <<EOF
+mirror_style release
+download_style apt
+finddebs_style from-indices
+variants - buildd fakechroot minbase
+keyring $KEYRING
+default_mirror $MIRROR
+
+# include common settings
+if [ -e "\$DEBOOTSTRAP_DIR/scripts/debian-common" ]; then
+ . "\$DEBOOTSTRAP_DIR/scripts/debian-common"
+elif [ -e /debootstrap/debian-common ]; then
+ . /debootstrap/debian-common
+elif [ -e "\$DEBOOTSTRAP_DIR/debian-common" ]; then
+ . "\$DEBOOTSTRAP_DIR/debian-common"
+else
+ error 1 NOCOMMON "File not found: debian-common"
+fi
+EOF
+
 status "debootstrap first stage"
 debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
   --keyring=$KEYRING --variant - --include="${MINPKGS// /,}" "$RELEASE" "$R" $BOOTSTRAP_URL
