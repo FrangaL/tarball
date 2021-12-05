@@ -192,7 +192,7 @@ elif [[ "${OS}" == "raspios" ]]; then
       MIRROR_PIOS=${MIRROR/raspbian./archive.}
       KEYRING=/usr/share/keyrings/debian-archive-keyring.gpg
       GPG_KEY=$PIOS_KEY
-      BOOTSTRAP_URL=$DEB_MIRROR
+      BOOTSTRAP_URL=$PIOS_MIRROR
       ;;
     raspios*armhf)
       MIRROR=$RASP_MIRROR
