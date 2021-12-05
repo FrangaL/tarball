@@ -381,7 +381,6 @@ if [ "$OS" = raspios ]; then
   net.ifnames=0 dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootwait
 EOM
 elif [ "$OS" = debian ]; then
-  mkdir -p "${R}/${BOOT}/"
   cat <<-EOM >"${R}/${BOOT}"/cmdline.txt
   net.ifnames=0 console=tty1 root=/dev/mmcblk0p2 rw  rootwait
 EOM
