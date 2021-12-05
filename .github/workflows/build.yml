@@ -23,11 +23,30 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build images
         run: |
-              #sudo apt-get update
-              #sudo apt-get install wget
+              sudo apt-get update
+              sudo apt-get install debootstrap
               #wget http://ftp.us.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.126+nmu1_all.deb
               #wget http://ftp.us.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2021.1.1_all.deb
               #sudo dpkg -i debootstrap_1.0.126+nmu1_all.deb debian-archive-keyring_2021.1.1_all.deb
+              cat >"/usr/share/debootstrap/scripts/sid" <<EOF
+              mirror_style release
+              download_style apt
+              finddebs_style from-indices
+              variants - buildd fakechroot minbase
+              keyring $KEYRING
+              default_mirror $MIRROR
+
+              # include common settings
+              if [ -e "\$DEBOOTSTRAP_DIR/scripts/debian-common" ]; then
+               . "\$DEBOOTSTRAP_DIR/scripts/debian-common"
+              elif [ -e /debootstrap/debian-common ]; then
+               . /debootstrap/debian-common
+              elif [ -e "\$DEBOOTSTRAP_DIR/debian-common" ]; then
+               . "\$DEBOOTSTRAP_DIR/debian-common"
+              else
+               error 1 NOCOMMON "File not found: debian-common"
+              fi
+              EOF
               echo "OS=${{ matrix.DISTRO }}" > config.txt
               echo "ARCHITECTURE=${{ matrix.ARCH }}" >> config.txt
               echo "RELEASE=${{ matrix.SUITE }}" >> config.txt
