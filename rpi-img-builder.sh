@@ -373,7 +373,6 @@ mkdir -p "${R}/etc/initramfs-tools/conf.d/"
 echo "RESUME=none" > "${R}/etc/initramfs-tools/conf.d/resume"
 
 # Instalando kernel
-# shellcheck disable=SC2086
 systemd-nspawn_exec apt-get install -y ${KERNEL_IMAGE}
 # Configuración firmware
 if [ "$OS" = raspios ]; then
@@ -391,7 +390,6 @@ fi
 echo "hdmi_force_hotplug=1" >>"$R"/"${BOOT}"/config.txt
 
 status "Instalar paquetes base"
-# shellcheck disable=SC2086
 systemd-nspawn_exec apt-get install -y $INCLUDEPKGS
 status "Activar servicios generate-ssh-host-keys y rpi-resizerootfs"
 #echo | sed -e '/^#/d ; /^ *$/d' | systemd-nspawn_exec <<\EOF
@@ -512,9 +510,9 @@ if [[ "$OS" == "debian" && "$VARIANT" == "lite" ]]; then
   installdeps
   mkdir -p "$CURRENT_DIR"/userland/build
   pushd "$CURRENT_DIR"/userland/build
-  cmake -DCMAKE_TOOLCHAIN_FILE="makefiles/cmake/toolchains/"${LIB_ARCH}".cmake" \
+  cmake -DCMAKE_TOOLCHAIN_FILE="makefiles/cmake/toolchains/${LIB_ARCH}.cmake" \
   -DCMAKE_BUILD_TYPE=release -DALL_APPS=OFF "$CMAKE_ARM" ../
-  make -j$(nproc) 2>/dev/null
+  make -j"$(nproc)" 2>/dev/null
   mkdir -p "$R"/opt/vc
   mv {bin,lib,inc} "$R"/opt/vc
   cd "$CURRENT_DIR"
