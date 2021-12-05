@@ -28,7 +28,7 @@ jobs:
               #wget http://ftp.us.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.126+nmu1_all.deb
               #wget http://ftp.us.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2021.1.1_all.deb
               #sudo dpkg -i debootstrap_1.0.126+nmu1_all.deb debian-archive-keyring_2021.1.1_all.deb
-              cat >"/usr/share/debootstrap/scripts/sid" <<EOF
+              sudo cat >"/usr/share/debootstrap/scripts/sid" <<EOF
               mirror_style release
               download_style apt
               finddebs_style from-indices
