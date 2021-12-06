@@ -225,7 +225,7 @@ fi
 status "debootstrap first stage"
 sed -i'.bkp' 's/^keyring/keyring $KEYRING\ndefault_mirror $BOOTSTRAP_URL\n#/' /usr/share/debootstrap/scripts/sid
 debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
-  --keyring=$KEYRING --variant minbase "$RELEASE" "$R" $BOOTSTRAP_URL
+  --keyring=$KEYRING "$RELEASE" "$R" $BOOTSTRAP_URL
 mv /usr/share/debootstrap/scripts/sid{.bkp,}
 
 cat >"$R"/etc/apt/apt.conf.d/99_norecommends <<EOF
