@@ -100,16 +100,11 @@ total_time() {
 }
 
 installdeps() {
-  for PKG in $DEPS; do
-    if [[ $(dpkg -l "$PKG" | awk '/^ii/ { print $1 }') != ii ]]; then
-      apt-get -q -y install --no-install-recommends -o APT::Install-Suggests=0 \
-      -o dpkg::options::=--force-confnew -o Acquire::Retries=3 "$PKG"
-    fi
-  done
+  [ $APT_UPDATE = "0" ] && apt-get update; APT_UPDATE="1"
+  apt-get -q -y install --no-install-recommends -o APT::Install-Suggests=0 \
+      -o dpkg::options::=--force-confnew -o Acquire::Retries=3 "$DEPS" || installdeps
 }
 
-status "Actualizando repositorio apt ..."
-apt-get update || apt-get update
 status "Instando dependencias necesarias ..."
 DEPS="binfmt-support qemu-user-static dosfstools rsync wget lsof git parted dirmngr e2fsprogs \
 systemd-container debootstrap xz-utils kmod udev dbus gnupg gnupg-utils debian-archive-keyring"
