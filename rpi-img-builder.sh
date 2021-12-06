@@ -395,6 +395,7 @@ echo "hdmi_force_hotplug=1" >>"$R"/"${BOOT}"/config.txt
 
 status "Instalar paquetes base"
 systemd-nspawn_exec apt-get install -y $INCLUDEPKGS
+systemd-nspawn_exec apt-get -y dist-upgrade
 status "Activar servicios generate-ssh-host-keys y rpi-resizerootfs"
 #echo | sed -e '/^#/d ; /^ *$/d' | systemd-nspawn_exec <<\EOF
 status "Activar servicio redimendionado partición root"
