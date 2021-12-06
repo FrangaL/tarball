@@ -116,7 +116,7 @@ systemd-container debootstrap xz-utils kmod udev dbus gnupg gnupg-utils debian-a
 installdeps
 
 # Checkear versión mínima debootstrap
-if $(dpkg-query -f '${Version}' -W debootstrap) lt "1.0.105"; then
+if dpkg --compare-versions "$(dpkg-query -f '${Version}' -W debootstrap)" lt "1.0.105"; then
   echo "Actualmente su versión de debootstrap no soporta el script" >&2
   echo "Actualice debootstrap, versión mínima 1.0.105" >&2
   exit 1
@@ -225,7 +225,7 @@ fi
 status "debootstrap first stage"
 sed -i'.bkp' 's/^keyring/keyring $KEYRING\ndefault_mirror $BOOTSTRAP_URL\n#/' /usr/share/debootstrap/scripts/sid
 debootstrap --foreign --arch="${ARCHITECTURE}" --components="${COMPONENTS// /,}" \
-  --keyring=$KEYRING --variant - "$RELEASE" "$R" $BOOTSTRAP_URL
+  --keyring=$KEYRING --variant minbase "$RELEASE" "$R" $BOOTSTRAP_URL
 mv /usr/share/debootstrap/scripts/sid{.bkp,}
 
 cat >"$R"/etc/apt/apt.conf.d/99_norecommends <<EOF
