@@ -186,6 +186,7 @@ if [[ "${OS}" == "debian" ]]; then
 elif [[ "${OS}" == "raspios" ]]; then
   BOOT="/boot"
   KERNEL_IMAGE="raspberrypi-kernel raspberrypi-bootloader"
+  EXTRAPKGS+=" raspi-config"
   case ${OS}+${ARCHITECTURE} in
     raspios*arm64)
       MIRROR=$PIOS_MIRROR
