@@ -37,4 +37,4 @@ jobs:
         with:
           name: ${{ steps.vars.outputs.tag }}
           draft: false
-          files: ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.*
+          files: ${{ matrix.DISTRO }}-${{ matrix.SUITE }}-${{ matrix.VARIANT }}-${{ matrix.ARCH }}.img.xz
