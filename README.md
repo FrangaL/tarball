@@ -1,4 +1,12 @@
-# tarball
+= tarball
+
+:hubp: frangal/rpi-images-builder
+:hub: https://hub.docker.com/r/{hubp}/
+
+image:https://img.shields.io/docker/image-size/{hubp}.svg[link={hub}]
+
+
+
 [![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
 [![CodeFactor](https://www.codefactor.io/repository/github/frangal/rpi-img-builder/badge/master)](https://www.codefactor.io/repository/github/frangal/rpi-img-builder/overview/master)
 
